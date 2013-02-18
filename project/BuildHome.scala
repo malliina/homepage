@@ -19,10 +19,12 @@ object GitBuild extends Build {
   val beesConfig = Util.optionally(
     Util.props((Path.userHome / ".bees" / "bees.config").toString)
   ).getOrElse(Map.empty)
-
+  val myWebSettings = webSettings ++ Seq(
+    webappResources in Compile <+= (sourceDirectory in Runtime)(sd => sd / "resources" / "publicweb")
+  )
   val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "com.mle",
-    version := "0.67-SNAPSHOT",
+    version := "0.678-SNAPSHOT",
     scalaVersion := "2.10.0",
     retrieveManaged := false,
     publishTo := Some(Resolver.url("my-sbt-releases", new URL("http://xxx/artifactory/my-sbt-releases/"))(Resolver.ivyStylePatterns)),
@@ -34,11 +36,9 @@ object GitBuild extends Build {
     exportJars := false
   ) ++ credentialSettings
 
+
   lazy val homePage = Project("homepage", file("."), settings = commonSettings)
-    .settings(
-    webappResources in Compile <+= (sourceDirectory in Runtime)(sd => sd / "resources" / "publicweb")
-  ).settings(libraryDependencies ++= Seq(scalaTest, util, utilWeb, warDep))
-    .settings(webSettings: _*)
+    .settings(libraryDependencies ++= Seq(scalaTest, util, utilWeb, warDep))
     .settings(cloudBeesSettings: _*)
     .settings(
     CloudBees.useDeltaWar := false,
@@ -46,4 +46,5 @@ object GitBuild extends Build {
     CloudBees.apiKey := beesConfig get "bees.api.key",
     CloudBees.apiSecret := beesConfig get "bees.api.secret",
     CloudBees.username := beesConfig get "bees.project.app.domain")
+  .settings(myWebSettings:_*)
 }
