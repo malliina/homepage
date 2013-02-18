@@ -22,7 +22,7 @@ object GitBuild extends Build {
 
   val commonSettings = Defaults.defaultSettings ++ Seq(
     organization := "com.mle",
-    version := "0.66-SNAPSHOT",
+    version := "0.67-SNAPSHOT",
     scalaVersion := "2.10.0",
     retrieveManaged := false,
     publishTo := Some(Resolver.url("my-sbt-releases", new URL("http://xxx/artifactory/my-sbt-releases/"))(Resolver.ivyStylePatterns)),
@@ -31,8 +31,7 @@ object GitBuild extends Build {
     // causing e.g. tests requiring javax.net.ssl.keyStore props to fail
     // ... unless fork is true
     sbt.Keys.fork in Test := true,
-    // the jars of modules depended on are not included unless this is true
-    exportJars := true
+    exportJars := false
   ) ++ credentialSettings
 
   lazy val homePage = Project("homepage", file("."), settings = commonSettings)
@@ -40,8 +39,10 @@ object GitBuild extends Build {
     webappResources in Compile <+= (sourceDirectory in Runtime)(sd => sd / "resources" / "publicweb")
   ).settings(libraryDependencies ++= Seq(scalaTest, util, utilWeb, warDep))
     .settings(webSettings: _*)
+    .settings(cloudBeesSettings: _*)
     .settings(
-    CloudBees.applicationId := Some("home"),
+    CloudBees.useDeltaWar := false,
+    CloudBees.applicationId := Some("hometest"),
     CloudBees.apiKey := beesConfig get "bees.api.key",
     CloudBees.apiSecret := beesConfig get "bees.api.secret",
     CloudBees.username := beesConfig get "bees.project.app.domain")
