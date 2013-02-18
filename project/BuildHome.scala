@@ -42,7 +42,7 @@ object GitBuild extends Build {
     .settings(cloudBeesSettings: _*)
     .settings(
     CloudBees.useDeltaWar := false,
-    CloudBees.applicationId := Some("hometest"),
+    CloudBees.applicationId := Some("home"),
     CloudBees.apiKey := beesConfig get "bees.api.key",
     CloudBees.apiSecret := beesConfig get "bees.api.secret",
     CloudBees.username := beesConfig get "bees.project.app.domain")
