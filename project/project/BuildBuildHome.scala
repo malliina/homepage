@@ -19,7 +19,8 @@ object BuildBuildHome extends Build {
     libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % ("0.12.0-0.2.11.1")),
     addSbtPlugin("eu.getintheloop" %% "sbt-cloudbees-plugin" % "0.4.1"),
     addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.3.0-SNAPSHOT"),
-    addSbtPlugin("com.mle" %% "util" % "0.67-SNAPSHOT")
+    addSbtPlugin("com.github.malliina" %% "util" % "0.7.0"),
+    addSbtPlugin("com.github.malliina" %% "sbt-paas-deployer" % "0.102")
   )
   lazy val root = Project("plugins", file("."))
 }
